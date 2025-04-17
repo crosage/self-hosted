@@ -92,22 +92,22 @@ services:
   smtp:
     <<: *restart_policy
     platform: linux/amd64
-    image: tianon/exim4
+    image: swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/tianon/exim4:latest
     hostname: "${SENTRY_MAIL_HOST:-}"
     volumes:
       - "sentry-smtp:/var/spool/exim4"
       - "sentry-smtp-log:/var/log/exim4"
   memcached:
     <<: *restart_policy
-    image: "memcached:1.6.26-alpine"
+    image: swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/library/memcached:1.6.26
     command: ["-I", "${SENTRY_MAX_EXTERNAL_SOURCEMAP_SIZE:-1M}"]
-    healthcheck:
-      <<: *healthcheck_defaults
+  #  healthcheck:
+  #    <<: *healthcheck_defaults
       # From: https://stackoverflow.com/a/31877626/5155484
-      test: echo stats | nc 127.0.0.1 11211
+  #    test: echo stats | nc 127.0.0.1 11211
   redis:
     <<: *restart_policy
-    image: "redis:6.2.14-alpine"
+    image: "swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/redis:6.2.14"
     healthcheck:
       <<: *healthcheck_defaults
       test: redis-cli ping | grep PONG
@@ -125,7 +125,7 @@ services:
   postgres:
     <<: *restart_policy
     # Using the same postgres version as Sentry dev for consistency purposes
-    image: "postgres:14.11"
+    image: "swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/postgres:14.11"
     healthcheck:
       <<: *healthcheck_defaults
       # Using default user "postgres" from sentry/sentry.conf.example.py or value of POSTGRES_USER if provided
@@ -142,7 +142,7 @@ services:
       - "sentry-postgres:/var/lib/postgresql/data"
   kafka:
     <<: *restart_policy
-    image: "confluentinc/cp-kafka:7.6.1"
+    image: "swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/confluentinc/cp-kafka:7.6.1"
     environment:
       # https://docs.confluent.io/platform/current/installation/docker/config-reference.html#cp-kakfa-example
       KAFKA_PROCESS_ROLES: "broker,controller"
@@ -183,7 +183,7 @@ services:
     build:
       context: ./clickhouse
       args:
-        BASE_IMAGE: "altinity/clickhouse-server:23.8.11.29.altinitystable"
+        BASE_IMAGE: "swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/altinity/clickhouse-server:23.8.11.29.altinitystable"
     ulimits:
       nofile:
         soft: 262144
@@ -452,7 +452,7 @@ services:
     <<: *restart_policy
     ports:
       - "$SENTRY_BIND:80/tcp"
-    image: "nginx:1.25.4-alpine"
+    image: swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/nginx:1.25.5
     volumes:
       - type: bind
         read_only: true
@@ -465,7 +465,7 @@ services:
       - relay
   relay:
     <<: *restart_policy
-    image: "$RELAY_IMAGE"
+    image: swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/getsentry/relay:24.12.2
     volumes:
       - type: bind
         read_only: true

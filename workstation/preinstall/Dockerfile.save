@@ -1,4 +1,4 @@
-# Use a predefined image with no out-of-the-box IDE set up.
+aaadasdasdsadasdasdasdasdasdasdsa# Use a predefined image with no out-of-the-box IDE set up.
 FROM us-west1-docker.pkg.dev/cloud-workstations-images/predefined/base:latest
 
 # Modifications to the `/home` directory must take place outside of the Dockerfile. Add a startup
@@ -12,11 +12,7 @@ RUN chmod -R +x /etc/workstation-startup.d
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Install VSCode and the GitHub CLI.
-RUN echo "deb http://mirrors.aliyun.com/debian/ bookworm main contrib non-free non-free-firmware" > /etc/apt/sources.list && \
-    echo "deb http://mirrors.aliyun.com/debian/ bookworm-updates main contrib non-free non-free-firmware" >> /etc/apt/sources.list && \
-    echo "deb http://mirrors.aliyun.com/debian-security/ bookworm-security main contrib non-free non-free-firmware" >> /etc/apt/sources.list && \
-    rm -f /etc/apt/sources.list.d/* && \
-    wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > vscode.gpg \
+RUN wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > vscode.gpg \
     && install -D -o root -g root -m 644 vscode.gpg /etc/apt/keyrings/vscode.gpg \
     && sh -c 'echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/keyrings/vscode.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list' \
     && rm -f vscode.gpg \
